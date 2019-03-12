@@ -2,10 +2,11 @@ import re
 import random
 
 from django.utils.encoding import smart_text
+from django.utils.deprecation import MiddlewareMixin
 
 from .. import defaults
 
-extesions = defaults.FRESHLY_ASSETS_EXTENTIONS + [
+extensions = defaults.FRESHLY_ASSETS_EXTENTIONS + [
     i for i in defaults.FRESHLY_ASSETS_EXTENTIONS_EXTRA
     if i not in defaults.FRESHLY_ASSETS_EXTENTIONS
 ]
@@ -17,11 +18,11 @@ ASSETS_PATTERNS = (
     '({})'              # extension(s) to append version number to [group 3]
     '(?!\?)'            # immediately after the extension, we shouldn't see anything but space, or ', or " [no group]
     '(.*?\>)'           # anything else before the closing > [group 4]
-    .format('|'.join(extesions))
+    .format('|'.join(extensions))
 )
 
 
-class AssetVersioningMiddleware(object):
+class AssetVersioningMiddleware(MiddlewareMixin):
     """
     A Django middleware that adds a version number to assets within the response content.
     """
